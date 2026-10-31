@@ -1,0 +1,879 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COOKIT14 — Your Recipe Book</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --orange: #ff7900;
+    --orange-light: #fff0e2;
+    --black: #171717;
+    --white: #fff;
+    --gray: #f6f6f6;
+    --muted: #858585;
+    --border: #ebebeb;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--white);
+    color: var(--black);
+    font-family: "DM Sans", Arial, sans-serif;
+}
+
+button, input, textarea { font: inherit; }
+button { cursor: pointer; transition: .2s; }
+button:hover { transform: translateY(-1px); }
+
+header {
+    height: 82px;
+    padding: 0 6%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: #ffffffee;
+    backdrop-filter: blur(12px);
+    z-index: 5;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 25px;
+    font-weight: 700;
+    letter-spacing: -1.5px;
+}
+
+.brand-icon {
+    width: 39px;
+    height: 39px;
+    display: grid;
+    place-items: center;
+    background: var(--black);
+    color: var(--orange);
+    border-radius: 12px;
+    font-size: 23px;
+    transform: rotate(-5deg);
+}
+
+.brand-name span { color: var(--orange); }
+
+button.primary {
+    border: 0;
+    border-radius: 10px;
+    background: var(--orange);
+    color: white;
+    padding: 12px 18px;
+    font-weight: 700;
+}
+
+button.primary:hover { background: #e96e00; }
+
+button.dark {
+    border: 0;
+    border-radius: 10px;
+    background: var(--black);
+    color: white;
+    padding: 12px 17px;
+    font-weight: 600;
+}
+
+button.light {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 15px;
+    color: var(--black);
+    font-weight: 600;
+}
+
+button.delete {
+    border: 0;
+    border-radius: 9px;
+    background: #fff0ef;
+    color: #cf3838;
+    padding: 9px 12px;
+    font-weight: 700;
+}
+
+.hidden { display: none !important; }
+
+main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 25px 80px;
+}
+
+h1, h2, h3, p { margin-top: 0; }
+h1, h2, h3 { font-family: "Space Grotesk", sans-serif; }
+
+h1 {
+    font-size: clamp(38px, 6vw, 62px);
+    line-height: 1.05;
+    letter-spacing: -3px;
+    margin-bottom: 16px;
+}
+
+h2 { letter-spacing: -1px; }
+.muted { color: var(--muted); line-height: 1.65; }
+.orange { color: var(--orange); }
+
+.eyebrow {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--orange);
+}
+
+.hero {
+    text-align: center;
+    max-width: 680px;
+    margin: 35px auto 38px;
+}
+
+.hero p { font-size: 16px; }
+
+.panel {
+    max-width: 430px;
+    margin: 0 auto;
+    padding: 30px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    box-shadow: 0 18px 55px #00000008;
+}
+
+label.field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin: 15px 0 7px;
+}
+
+input:not([type="checkbox"]), textarea {
+    width: 100%;
+    border: 1px solid #e3e3e3;
+    background: white;
+    padding: 13px 14px;
+    border-radius: 10px;
+    color: var(--black);
+}
+
+input:focus, textarea:focus {
+    outline: 2px solid #ff790055;
+    border-color: var(--orange);
+}
+
+.auth-error { color: #c62828; font-size: 13px; }
+
+.switch {
+    color: var(--orange);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.dashboard-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.dashboard-top h1 { font-size: clamp(38px, 5vw, 52px); }
+
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
+    gap: 17px;
+    margin-top: 28px;
+}
+
+.project-card {
+    border: 1px solid var(--border);
+    padding: 21px;
+    border-radius: 16px;
+    background: white;
+    transition: .2s;
+    min-height: 175px;
+    cursor: pointer;
+    overflow-wrap: anywhere;
+}
+
+.project-card:hover {
+    border-color: var(--orange);
+    box-shadow: 0 10px 30px #00000009;
+    transform: translateY(-3px);
+}
+
+.project-card h3 { font-size: 19px; margin: 13px 0 9px; }
+
+.project-symbol {
+    background: var(--orange-light);
+    color: var(--orange);
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    font-size: 21px;
+}
+
+.card-date { color: var(--muted); font-size: 12px; margin-top: 18px; }
+
+.empty {
+    padding: 45px 15px;
+    text-align: center;
+    border: 1px dashed #ddd;
+    border-radius: 16px;
+    margin-top: 28px;
+}
+
+.editor-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+
+.editor-top .toolbar { align-items: center; }
+
+.editor-title {
+    font-family: "Space Grotesk", sans-serif !important;
+    font-size: 31px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    border: 0 !important;
+    padding: 10px 0 !important;
+}
+
+.toolbar { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.editor-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 22px;
+    align-items: start;
+}
+
+.surface {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 23px;
+    background: white;
+}
+
+.surface h2 { font-size: 20px; margin-bottom: 8px; }
+
+#projectContent {
+    min-height: 390px;
+    resize: vertical;
+    line-height: 1.8;
+    margin-top: 15px;
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.progress-track {
+    height: 6px;
+    background: #eee;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 17px 0 8px;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0;
+    background: var(--orange);
+    transition: width .2s;
+}
+
+.progress-text { font-size: 12px; color: var(--muted); }
+
+.add-task {
+    display: flex;
+    gap: 8px;
+    margin: 19px 0;
+}
+
+.add-task input { min-width: 0; }
+.add-task button { padding: 0 14px; }
+
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.task {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 12px;
+    border-radius: 10px;
+    background: var(--gray);
+}
+
+.task input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 2px 0 0;
+    flex-shrink: 0;
+    accent-color: var(--orange);
+    cursor: pointer;
+}
+
+.task-text {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+.task.done .task-text {
+    text-decoration: line-through;
+    color: #999;
+}
+
+.task-delete {
+    border: 0;
+    background: transparent;
+    color: #999;
+    font-size: 19px;
+    padding: 0 2px;
+}
+
+.task-delete:hover { color: #c62828; }
+
+.checklist-empty {
+    font-size: 13px;
+    text-align: center;
+    color: #999;
+    padding: 18px 0;
+}
+
+.save-status {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 13px;
+}
+
+@media(max-width: 760px) {
+    .editor-layout { grid-template-columns: 1fr; }
+    main { padding: 30px 17px 60px; }
+    header { padding: 0 18px; height: 72px; }
+    .panel { padding: 23px; }
+    h1 { letter-spacing: -2px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="brand">
+        <div class="brand-icon">♨</div>
+        <div class="brand-name">COOKIT<span>14</span></div>
+    </div>
+    <button id="logoutButton" class="dark hidden" onclick="logout()">Log out ↗</button>
+</header>
+
+<main>
+
+<section id="authScreen">
+    <div class="hero">
+        <p class="eyebrow">YOUR PERSONAL RECIPE BOOK</p>
+        <h1>Good food starts<br>with <span class="orange">your ideas.</span></h1>
+        <p class="muted">Save your favorite recipes, organize ingredients,<br>and keep every cooking step in one place.</p>
+    </div>
+
+    <div class="panel">
+        <h2 id="authTitle">Create your recipe book</h2>
+        <p class="muted" id="authDescription">Sign up to save your recipes.</p>
+
+        <form id="authForm">
+            <label class="field-label" for="username">Username</label>
+            <input id="username" autocomplete="username" minlength="3" maxlength="30"
+                placeholder="Your username" required>
+
+            <label class="field-label" for="password">Password</label>
+            <input id="password" type="password" autocomplete="current-password"
+                placeholder="Your password" required>
+
+            <button id="authButton" class="primary" type="submit"
+                style="width:100%;margin-top:10px">Create account →</button>
+        </form>
+
+        <p id="authError" class="auth-error"></p>
+
+        <p class="muted" style="font-size:13px;margin-bottom:0">
+            <span id="switchText">Already have an account?</span>
+            <span class="switch" id="switchMode" onclick="toggleAuth()"> Log in</span>
+        </p>
+    </div>
+</section>
+
+<section id="dashboard" class="hidden">
+    <p class="eyebrow">YOUR COOKBOOK</p>
+
+    <div class="dashboard-top">
+        <div>
+            <h1>My recipes<span class="orange">.</span></h1>
+            <p class="muted">Hey, <strong id="welcomeUser"></strong>! What are we cooking?</p>
+        </div>
+        <button class="primary" onclick="createProject()">＋ New recipe</button>
+    </div>
+
+    <div id="projectGrid" class="project-grid"></div>
+
+    <div id="emptyMessage" class="empty hidden">
+        <div style="font-size:38px;margin-bottom:12px">♨</div>
+        <h2>Your cookbook is empty.</h2>
+        <p class="muted">Add your first recipe and start building your collection.</p>
+        <button class="primary" onclick="createProject()">Add your first recipe →</button>
+    </div>
+</section>
+
+<section id="editor" class="hidden">
+    <div class="editor-top">
+        <button class="light" onclick="backToProjects()">← All recipes</button>
+        <div class="toolbar">
+            <span id="saveStatus" class="save-status">✓ All changes saved</span>
+            <button class="delete" onclick="deleteProject()">Delete recipe</button>
+        </div>
+    </div>
+
+    <p class="eyebrow">RECIPE EDITOR</p>
+
+    <input id="projectTitle" class="editor-title" maxlength="100"
+        placeholder="Name your recipe">
+
+    <div class="editor-layout">
+        <div class="surface">
+            <h2>👨‍🍳 Instructions</h2>
+            <p class="muted" style="font-size:13px">
+                Write how to make your recipe, step by step.
+            </p>
+
+            <textarea id="projectContent"
+                placeholder="1. Preheat the oven...\n2. Mix the ingredients...\n3. Bake until golden..."></textarea>
+        </div>
+
+        <div class="surface">
+            <div class="section-heading">
+                <h2>🥕 Ingredients</h2>
+                <span class="orange" style="font-size:20px">✳</span>
+            </div>
+
+            <p class="muted" style="font-size:13px">
+                Add ingredients and tick them off as you prepare.
+            </p>
+
+            <div class="progress-track">
+                <div id="progressFill" class="progress-fill"></div>
+            </div>
+
+            <div id="progressText" class="progress-text">0 of 0 prepared</div>
+
+            <form id="taskForm" class="add-task">
+                <input id="taskInput" maxlength="200"
+                    placeholder="e.g. 200g flour" required>
+                <button class="primary" type="submit">＋</button>
+            </form>
+
+            <div id="taskList" class="task-list"></div>
+            <p id="checklistEmpty" class="checklist-empty">
+                Your ingredients will appear here.
+            </p>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<footer>COOKIT14 · Collect recipes. Create something delicious.</footer>
+
+<script>
+const STORAGE_KEY = "cookit14_recipe_book_v1";
+
+let accounts = readAccounts();
+let currentUser = null;
+let currentProjectId = null;
+let loginMode = false;
+let saveTimer = null;
+
+function readAccounts() {
+    try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+    } catch (error) {
+        return {};
+    }
+}
+
+function persist() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(accounts));
+}
+
+function toggleAuth() {
+    loginMode = !loginMode;
+
+    document.getElementById("authTitle").textContent =
+        loginMode ? "Welcome back" : "Create your recipe book";
+
+    document.getElementById("authDescription").textContent =
+        loginMode ? "Log in to see your saved recipes." : "Sign up to save your recipes.";
+
+    document.getElementById("authButton").textContent =
+        loginMode ? "Log in →" : "Create account →";
+
+    document.getElementById("switchText").textContent =
+        loginMode ? "Need an account?" : "Already have an account?";
+
+    document.getElementById("switchMode").textContent =
+        loginMode ? " Sign up" : " Log in";
+
+    document.getElementById("authError").textContent = "";
+}
+
+document.getElementById("authForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
+    const error = document.getElementById("authError");
+
+    if (!/^[a-zA-Z0-9_-]{3,30}$/.test(username)) {
+        error.textContent = "Use 3–30 English letters, numbers, _ or - for your username.";
+        return;
+    }
+
+    const key = username.toLowerCase();
+
+    if (loginMode) {
+        if (!accounts[key] || accounts[key].password !== password) {
+            error.textContent = "Incorrect username or password.";
+            return;
+        }
+    } else {
+        if (accounts[key]) {
+            error.textContent = "This username already exists. Try logging in.";
+            return;
+        }
+
+        accounts[key] = {
+            username,
+            password,
+            projects: []
+        };
+
+        persist();
+    }
+
+    currentUser = key;
+    document.getElementById("password").value = "";
+    document.getElementById("authError").textContent = "";
+    showDashboard();
+});
+
+function showDashboard() {
+    document.getElementById("authScreen").classList.add("hidden");
+    document.getElementById("dashboard").classList.remove("hidden");
+    document.getElementById("editor").classList.add("hidden");
+    document.getElementById("logoutButton").classList.remove("hidden");
+    document.getElementById("welcomeUser").textContent =
+        accounts[currentUser].username;
+
+    currentProjectId = null;
+    renderProjects();
+}
+
+function logout() {
+    saveCurrentProject();
+    clearTimeout(saveTimer);
+
+    currentUser = null;
+    currentProjectId = null;
+
+    document.getElementById("dashboard").classList.add("hidden");
+    document.getElementById("editor").classList.add("hidden");
+    document.getElementById("authScreen").classList.remove("hidden");
+    document.getElementById("logoutButton").classList.add("hidden");
+}
+
+function createProject() {
+    const recipe = {
+        id: Date.now().toString() + Math.random().toString(36).slice(2),
+        title: "Untitled recipe",
+        content: "",
+        tasks: [],
+        updatedAt: new Date().toISOString()
+    };
+
+    accounts[currentUser].projects.unshift(recipe);
+    persist();
+    openProject(recipe.id);
+
+    document.getElementById("projectTitle").focus();
+    document.getElementById("projectTitle").select();
+}
+
+function renderProjects() {
+    const grid = document.getElementById("projectGrid");
+    grid.innerHTML = "";
+
+    const projects = accounts[currentUser].projects;
+
+    document.getElementById("emptyMessage").classList.toggle(
+        "hidden", projects.length > 0
+    );
+
+    projects.forEach(recipe => {
+        const card = document.createElement("article");
+        card.className = "project-card";
+
+        const symbol = document.createElement("div");
+        symbol.className = "project-symbol";
+        symbol.textContent = "♨";
+
+        const title = document.createElement("h3");
+        title.textContent = recipe.title || "Untitled recipe";
+
+        const preview = document.createElement("p");
+        preview.className = "muted";
+        preview.style.fontSize = "13px";
+
+        const ingredientCount = (recipe.tasks || []).length;
+        preview.textContent = ingredientCount + " ingredients · " +
+            (recipe.content ? "Instructions added" : "No instructions yet");
+
+        const date = document.createElement("div");
+        date.className = "card-date";
+        date.textContent = "Updated " +
+            new Date(recipe.updatedAt).toLocaleDateString();
+
+        card.append(symbol, title, preview, date);
+        card.addEventListener("click", () => openProject(recipe.id));
+        grid.appendChild(card);
+    });
+}
+
+function getProject() {
+    if (!currentUser || !currentProjectId) return null;
+
+    return accounts[currentUser].projects.find(
+        recipe => recipe.id === currentProjectId
+    ) || null;
+}
+
+function openProject(id) {
+    saveCurrentProject();
+    clearTimeout(saveTimer);
+
+    currentProjectId = id;
+    const recipe = getProject();
+
+    if (!recipe) return;
+
+    if (!Array.isArray(recipe.tasks)) recipe.tasks = [];
+
+    document.getElementById("dashboard").classList.add("hidden");
+    document.getElementById("editor").classList.remove("hidden");
+
+    document.getElementById("projectTitle").value = recipe.title;
+    document.getElementById("projectContent").value = recipe.content;
+    document.getElementById("saveStatus").textContent = "✓ All changes saved";
+
+    renderTasks();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function scheduleSave() {
+    document.getElementById("saveStatus").textContent = "Saving...";
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveCurrentProject, 350);
+}
+
+function saveCurrentProject() {
+    const recipe = getProject();
+    if (!recipe) return;
+
+    clearTimeout(saveTimer);
+
+    recipe.title = document.getElementById("projectTitle").value.trim()
+        || "Untitled recipe";
+
+    recipe.content = document.getElementById("projectContent").value;
+    recipe.updatedAt = new Date().toISOString();
+
+    persist();
+
+    document.getElementById("saveStatus").textContent = "✓ All changes saved";
+    renderProjects();
+}
+
+function backToProjects() {
+    saveCurrentProject();
+    clearTimeout(saveTimer);
+
+    currentProjectId = null;
+
+    document.getElementById("editor").classList.add("hidden");
+    document.getElementById("dashboard").classList.remove("hidden");
+
+    renderProjects();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function deleteProject() {
+    const recipe = getProject();
+    if (!recipe) return;
+
+    if (!confirm(`Delete "${recipe.title}" and its ingredients?`)) return;
+
+    clearTimeout(saveTimer);
+
+    accounts[currentUser].projects =
+        accounts[currentUser].projects.filter(
+            item => item.id !== currentProjectId
+        );
+
+    currentProjectId = null;
+    persist();
+
+    document.getElementById("editor").classList.add("hidden");
+    document.getElementById("dashboard").classList.remove("hidden");
+
+    renderProjects();
+}
+
+function addTask(text) {
+    const recipe = getProject();
+    if (!recipe) return;
+
+    if (!Array.isArray(recipe.tasks)) recipe.tasks = [];
+
+    recipe.tasks.push({
+        id: Date.now().toString() + Math.random().toString(36).slice(2),
+        text,
+        done: false
+    });
+
+    recipe.updatedAt = new Date().toISOString();
+
+    persist();
+    renderTasks();
+    renderProjects();
+}
+
+function renderTasks() {
+    const recipe = getProject();
+    const list = document.getElementById("taskList");
+    list.innerHTML = "";
+
+    if (!recipe) return;
+    if (!Array.isArray(recipe.tasks)) recipe.tasks = [];
+
+    const ingredients = recipe.tasks;
+    const prepared = ingredients.filter(item => item.done).length;
+
+    document.getElementById("progressText").textContent =
+        `${prepared} of ${ingredients.length} prepared`;
+
+    document.getElementById("progressFill").style.width =
+        ingredients.length
+            ? `${prepared / ingredients.length * 100}%`
+            : "0%";
+
+    document.getElementById("checklistEmpty").classList.toggle(
+        "hidden", ingredients.length > 0
+    );
+
+    ingredients.forEach(ingredient => {
+        const row = document.createElement("div");
+        row.className = "task" + (ingredient.done ? " done" : "");
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = ingredient.done;
+        checkbox.setAttribute("aria-label", "Mark ingredient prepared");
+
+        checkbox.addEventListener("change", () => {
+            ingredient.done = checkbox.checked;
+            recipe.updatedAt = new Date().toISOString();
+
+            persist();
+            renderTasks();
+            renderProjects();
+        });
+
+        const text = document.createElement("span");
+        text.className = "task-text";
+        text.textContent = ingredient.text;
+
+        const remove = document.createElement("button");
+        remove.className = "task-delete";
+        remove.type = "button";
+        remove.textContent = "×";
+        remove.setAttribute("aria-label", "Delete ingredient");
+
+        remove.addEventListener("click", () => {
+            recipe.tasks = recipe.tasks.filter(
+                item => item.id !== ingredient.id
+            );
+
+            recipe.updatedAt = new Date().toISOString();
+
+            persist();
+            renderTasks();
+            renderProjects();
+        });
+
+        row.append(checkbox, text, remove);
+        list.appendChild(row);
+    });
+}
+
+document.getElementById("taskForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    const input = document.getElementById("taskInput");
+    const text = input.value.trim();
+
+    if (!text) return;
+
+    addTask(text);
+    input.value = "";
+    input.focus();
+});
+
+document.getElementById("projectTitle").addEventListener("input", scheduleSave);
+document.getElementById("projectContent").addEventListener("input", scheduleSave);
+
+window.addEventListener("beforeunload", saveCurrentProject);
+</script>
+
+</body>
+</html>
