@@ -1,879 +1,360 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>COOKIT14 — Your Recipe Book</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-<style>
-:root {
-    --orange: #ff7900;
-    --orange-light: #fff0e2;
-    --black: #171717;
-    --white: #fff;
-    --gray: #f6f6f6;
-    --muted: #858585;
-    --border: #ebebeb;
-}
-
-* { box-sizing: border-box; }
-
-body {
-    margin: 0;
-    background: var(--white);
-    color: var(--black);
-    font-family: "DM Sans", Arial, sans-serif;
-}
-
-button, input, textarea { font: inherit; }
-button { cursor: pointer; transition: .2s; }
-button:hover { transform: translateY(-1px); }
-
-header {
-    height: 82px;
-    padding: 0 6%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    background: #ffffffee;
-    backdrop-filter: blur(12px);
-    z-index: 5;
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    font-family: "Space Grotesk", sans-serif;
-    font-size: 25px;
-    font-weight: 700;
-    letter-spacing: -1.5px;
-}
-
-.brand-icon {
-    width: 39px;
-    height: 39px;
-    display: grid;
-    place-items: center;
-    background: var(--black);
-    color: var(--orange);
-    border-radius: 12px;
-    font-size: 23px;
-    transform: rotate(-5deg);
-}
-
-.brand-name span { color: var(--orange); }
-
-button.primary {
-    border: 0;
-    border-radius: 10px;
-    background: var(--orange);
-    color: white;
-    padding: 12px 18px;
-    font-weight: 700;
-}
-
-button.primary:hover { background: #e96e00; }
-
-button.dark {
-    border: 0;
-    border-radius: 10px;
-    background: var(--black);
-    color: white;
-    padding: 12px 17px;
-    font-weight: 600;
-}
-
-button.light {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 11px 15px;
-    color: var(--black);
-    font-weight: 600;
-}
-
-button.delete {
-    border: 0;
-    border-radius: 9px;
-    background: #fff0ef;
-    color: #cf3838;
-    padding: 9px 12px;
-    font-weight: 700;
-}
-
-.hidden { display: none !important; }
-
-main {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 48px 25px 80px;
-}
-
-h1, h2, h3, p { margin-top: 0; }
-h1, h2, h3 { font-family: "Space Grotesk", sans-serif; }
-
-h1 {
-    font-size: clamp(38px, 6vw, 62px);
-    line-height: 1.05;
-    letter-spacing: -3px;
-    margin-bottom: 16px;
-}
-
-h2 { letter-spacing: -1px; }
-.muted { color: var(--muted); line-height: 1.65; }
-.orange { color: var(--orange); }
-
-.eyebrow {
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--orange);
-}
-
-.hero {
-    text-align: center;
-    max-width: 680px;
-    margin: 35px auto 38px;
-}
-
-.hero p { font-size: 16px; }
-
-.panel {
-    max-width: 430px;
-    margin: 0 auto;
-    padding: 30px;
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    box-shadow: 0 18px 55px #00000008;
-}
-
-label.field-label {
-    display: block;
-    font-size: 13px;
-    font-weight: 700;
-    margin: 15px 0 7px;
-}
-
-input:not([type="checkbox"]), textarea {
-    width: 100%;
-    border: 1px solid #e3e3e3;
-    background: white;
-    padding: 13px 14px;
-    border-radius: 10px;
-    color: var(--black);
-}
-
-input:focus, textarea:focus {
-    outline: 2px solid #ff790055;
-    border-color: var(--orange);
-}
-
-.auth-error { color: #c62828; font-size: 13px; }
-
-.switch {
-    color: var(--orange);
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.dashboard-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: end;
-    gap: 18px;
-    flex-wrap: wrap;
-}
-
-.dashboard-top h1 { font-size: clamp(38px, 5vw, 52px); }
-
-.project-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
-    gap: 17px;
-    margin-top: 28px;
-}
-
-.project-card {
-    border: 1px solid var(--border);
-    padding: 21px;
-    border-radius: 16px;
-    background: white;
-    transition: .2s;
-    min-height: 175px;
-    cursor: pointer;
-    overflow-wrap: anywhere;
-}
-
-.project-card:hover {
-    border-color: var(--orange);
-    box-shadow: 0 10px 30px #00000009;
-    transform: translateY(-3px);
-}
-
-.project-card h3 { font-size: 19px; margin: 13px 0 9px; }
-
-.project-symbol {
-    background: var(--orange-light);
-    color: var(--orange);
-    width: 40px;
-    height: 40px;
-    display: grid;
-    place-items: center;
-    border-radius: 12px;
-    font-size: 21px;
-}
-
-.card-date { color: var(--muted); font-size: 12px; margin-top: 18px; }
-
-.empty {
-    padding: 45px 15px;
-    text-align: center;
-    border: 1px dashed #ddd;
-    border-radius: 16px;
-    margin-top: 28px;
-}
-
-.editor-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 24px;
-}
-
-.editor-top .toolbar { align-items: center; }
-
-.editor-title {
-    font-family: "Space Grotesk", sans-serif !important;
-    font-size: 31px;
-    font-weight: 700;
-    letter-spacing: -1px;
-    border: 0 !important;
-    padding: 10px 0 !important;
-}
-
-.toolbar { display: flex; gap: 10px; flex-wrap: wrap; }
-
-.editor-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 320px;
-    gap: 22px;
-    align-items: start;
-}
-
-.surface {
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 23px;
-    background: white;
-}
-
-.surface h2 { font-size: 20px; margin-bottom: 8px; }
-
-#projectContent {
-    min-height: 390px;
-    resize: vertical;
-    line-height: 1.8;
-    margin-top: 15px;
-}
-
-.section-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-}
-
-.progress-track {
-    height: 6px;
-    background: #eee;
-    border-radius: 10px;
-    overflow: hidden;
-    margin: 17px 0 8px;
-}
-
-.progress-fill {
-    height: 100%;
-    width: 0;
-    background: var(--orange);
-    transition: width .2s;
-}
-
-.progress-text { font-size: 12px; color: var(--muted); }
-
-.add-task {
-    display: flex;
-    gap: 8px;
-    margin: 19px 0;
-}
-
-.add-task input { min-width: 0; }
-.add-task button { padding: 0 14px; }
-
-.task-list {
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
-}
-
-.task {
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-    padding: 12px;
-    border-radius: 10px;
-    background: var(--gray);
-}
-
-.task input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    margin: 2px 0 0;
-    flex-shrink: 0;
-    accent-color: var(--orange);
-    cursor: pointer;
-}
-
-.task-text {
-    flex: 1;
-    min-width: 0;
-    overflow-wrap: anywhere;
-    line-height: 1.5;
-    font-size: 14px;
-}
-
-.task.done .task-text {
-    text-decoration: line-through;
-    color: #999;
-}
-
-.task-delete {
-    border: 0;
-    background: transparent;
-    color: #999;
-    font-size: 19px;
-    padding: 0 2px;
-}
-
-.task-delete:hover { color: #c62828; }
-
-.checklist-empty {
-    font-size: 13px;
-    text-align: center;
-    color: #999;
-    padding: 18px 0;
-}
-
-.save-status {
-    color: var(--muted);
-    font-size: 12px;
-    margin-top: 13px;
-}
-
-@media(max-width: 760px) {
-    .editor-layout { grid-template-columns: 1fr; }
-    main { padding: 30px 17px 60px; }
-    header { padding: 0 18px; height: 72px; }
-    .panel { padding: 23px; }
-    h1 { letter-spacing: -2px; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COOKIT14 — Your Recipe Book</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root{--orange:#ff7a24;--orange-dark:#e96713;--ink:#171717;--muted:#777;--line:#e9e9e9;--paper:#fff;--soft:#f7f7f7}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:"DM Sans",sans-serif}
+    button,input,textarea{font:inherit}
+    button{cursor:pointer}
+    .hidden{display:none!important}
+    .brand{font-family:"Space Grotesk",sans-serif;font-size:27px;font-weight:700;letter-spacing:-1.2px;display:flex;align-items:center;gap:10px}
+    .brand-mark{width:39px;height:39px;border-radius:12px;background:var(--orange);color:white;display:grid;place-items:center;font-size:25px}
+    .orange{color:var(--orange)}
+    .auth-screen{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+    .auth-left{padding:36px 7%;display:flex;flex-direction:column}
+    .auth-content{width:min(420px,100%);margin:auto}
+    h1,h2,h3,p{margin-top:0}
+    h1{font-family:"Space Grotesk",sans-serif;font-size:42px;line-height:1.08;letter-spacing:-1.8px;margin-bottom:12px}
+    .muted{color:var(--muted);line-height:1.6}
+    .field{display:flex;flex-direction:column;gap:8px;margin:17px 0}
+    .field label{font-size:13px;font-weight:700}
+    .field input,.field textarea,.recipe-title-input{width:100%;padding:13px 14px;border:1px solid #ddd;border-radius:11px;outline:none;background:white;color:var(--ink)}
+    .field input:focus,.field textarea:focus,.recipe-title-input:focus{border-color:var(--orange);box-shadow:0 0 0 3px #ff7a241c}
+    .btn{border:0;border-radius:11px;padding:12px 17px;font-weight:700;transition:.15s}
+    .btn-primary{background:var(--orange);color:#fff}.btn-primary:hover{background:var(--orange-dark)}
+    .btn-secondary{background:#f0f0f0;color:var(--ink)}.btn-plain{background:transparent;color:var(--muted)}
+    .full{width:100%}
+    .auth-switch{text-align:center;margin-top:20px;font-size:14px}
+    .text-button{border:0;background:none;color:var(--orange-dark);font-weight:700;padding:3px}
+    .auth-art{background:#171717;color:white;display:flex;flex-direction:column;justify-content:space-between;padding:7%;overflow:hidden;position:relative}
+    .art-badge{border:1px solid #444;border-radius:99px;padding:8px 13px;font-size:12px;display:inline-flex;width:max-content}
+    .art-title{font-family:"Space Grotesk",sans-serif;font-size:clamp(40px,5vw,70px);line-height:1;letter-spacing:-3px;max-width:520px}
+    .food-circles{display:flex;gap:15px;align-items:center;margin:30px 0}
+    .food-circle{border-radius:50%;display:grid;place-items:center;font-size:clamp(34px,5vw,65px);width:clamp(80px,10vw,145px);aspect-ratio:1;background:#2b2b2b;border:1px solid #424242}
+    .auth-foot{font-size:12px;color:#aaa}
+    header{height:76px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 5%;gap:20px}
+    .header-actions{display:flex;align-items:center;gap:12px}
+    .user-email{font-size:13px;color:var(--muted);max-width:220px;overflow:hidden;text-overflow:ellipsis}
+    main{max-width:1320px;margin:auto;padding:36px 5% 70px}
+    .welcome-row{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:30px}
+    .welcome-row h1{font-size:36px;margin-bottom:7px}
+    .dashboard{display:grid;grid-template-columns:285px minmax(0,1fr);gap:28px}
+    .sidebar{border:1px solid var(--line);border-radius:17px;padding:18px;height:max-content}
+    .sidebar-heading{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:5px 8px 13px}
+    .recipe-nav{display:flex;flex-direction:column;gap:5px}
+    .recipe-nav-item{display:flex;align-items:center;gap:10px;text-align:left;width:100%;border:0;border-radius:10px;padding:11px;background:transparent;color:var(--ink)}
+    .recipe-nav-item.active{background:#fff0e7;color:#bd4e08;font-weight:700}
+    .recipe-nav-item .nav-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+    .recipe-nav-item .nav-dot{width:8px;height:8px;border-radius:50%;background:var(--orange);flex-shrink:0}
+    .sidebar-bottom{border-top:1px solid var(--line);margin-top:16px;padding-top:15px;color:var(--muted);font-size:12px;line-height:1.6}
+    .editor{min-width:0}
+    .editor-top{display:flex;gap:12px;align-items:center;margin-bottom:18px}
+    .recipe-title-input{font-family:"Space Grotesk",sans-serif;font-size:25px;font-weight:700;letter-spacing:-.6px;flex:1;min-width:0;border-color:transparent;padding:10px 12px}
+    .recipe-title-input:hover{border-color:#eee}
+    .save-status{font-size:12px;color:var(--muted);white-space:nowrap}
+    .editor-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .panel{border:1px solid var(--line);border-radius:16px;padding:20px;min-width:0}
+    .panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
+    .panel-head h2{font-family:"Space Grotesk",sans-serif;font-size:18px;margin:0;letter-spacing:-.4px}
+    .count{font-size:12px;background:#f2f2f2;padding:5px 8px;border-radius:99px;color:#555}
+    .ingredient-list{display:flex;flex-direction:column;gap:7px;min-height:90px}
+    .ingredient-row{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:10px;background:var(--soft)}
+    .ingredient-row input[type=checkbox]{accent-color:var(--orange);width:16px;height:16px;flex-shrink:0}
+    .ingredient-text{flex:1;min-width:0;overflow-wrap:anywhere;font-size:14px}
+    .ingredient-row.checked .ingredient-text{text-decoration:line-through;color:#999}
+    .delete-ingredient{border:0;background:transparent;color:#aaa;font-size:18px;padding:0 3px}
+    .add-row{display:flex;gap:7px;margin-top:13px}
+    .add-row input{min-width:0;flex:1;border:1px solid #ddd;border-radius:10px;padding:10px 11px;outline:none}
+    .add-row input:focus{border-color:var(--orange)}
+    .add-row button{padding:9px 12px}
+    textarea.instructions{resize:vertical;min-height:245px;line-height:1.7;width:100%;border:1px solid #eee;background:#fcfcfc;border-radius:12px;padding:14px;outline:none}
+    textarea.instructions:focus{border-color:var(--orange)}
+    .empty-state{text-align:center;border:1px dashed #ddd;border-radius:17px;padding:65px 20px}
+    .empty-icon{font-size:45px;margin-bottom:14px}
+    .empty-state h2{font-family:"Space Grotesk",sans-serif;font-size:24px;margin-bottom:8px}
+    .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#171717;color:white;padding:12px 18px;border-radius:12px;box-shadow:0 8px 30px #0002;font-size:14px;z-index:5;max-width:90vw}
+    .toast.error{background:#9e2828}
+    .setup-warning{background:#fff2e8;border:1px solid #ffd2b5;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.5;margin-bottom:18px}
+    @media(max-width:850px){.auth-screen{grid-template-columns:1fr}.auth-art{display:none}.auth-left{min-height:100vh;padding:26px}.dashboard{grid-template-columns:1fr}.sidebar{padding:14px}.recipe-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.sidebar-bottom{display:none}.editor-grid{grid-template-columns:1fr}.welcome-row{align-items:start;flex-direction:column}.welcome-row h1{font-size:31px}header{padding:0 20px}.user-email{display:none}}
+    @media(max-width:480px){main{padding:24px 16px 50px}.editor-top{flex-wrap:wrap}.recipe-title-input{font-size:22px}.save-status{order:3;width:100%}.panel{padding:15px}.auth-left{padding:22px}}
+  </style>
 </head>
-
 <body>
-
-<header>
-    <div class="brand">
-        <div class="brand-icon">♨</div>
-        <div class="brand-name">COOKIT<span>14</span></div>
-    </div>
-    <button id="logoutButton" class="dark hidden" onclick="logout()">Log out ↗</button>
-</header>
-
-<main>
-
-<section id="authScreen">
-    <div class="hero">
-        <p class="eyebrow">YOUR PERSONAL RECIPE BOOK</p>
-        <h1>Good food starts<br>with <span class="orange">your ideas.</span></h1>
-        <p class="muted">Save your favorite recipes, organize ingredients,<br>and keep every cooking step in one place.</p>
-    </div>
-
-    <div class="panel">
-        <h2 id="authTitle">Create your recipe book</h2>
-        <p class="muted" id="authDescription">Sign up to save your recipes.</p>
-
+  <section id="authScreen" class="auth-screen">
+    <div class="auth-left">
+      <div class="brand"><span class="brand-mark">♨</span><span>COOKIT<span class="orange">14</span></span></div>
+      <div class="auth-content">
+        <div id="authModeLabel" class="orange" style="font-weight:700;font-size:13px;margin-bottom:15px">YOUR PERSONAL RECIPE BOOK</div>
+        <h1 id="authTitle">Good food starts <span class="orange">here.</span></h1>
+        <p id="authSubtitle" class="muted">Sign in to keep your favorite recipes safe and ready wherever you cook.</p>
         <form id="authForm">
-            <label class="field-label" for="username">Username</label>
-            <input id="username" autocomplete="username" minlength="3" maxlength="30"
-                placeholder="Your username" required>
-
-            <label class="field-label" for="password">Password</label>
-            <input id="password" type="password" autocomplete="current-password"
-                placeholder="Your password" required>
-
-            <button id="authButton" class="primary" type="submit"
-                style="width:100%;margin-top:10px">Create account →</button>
+          <div id="nameField" class="field hidden"><label for="displayName">Your name</label><input id="displayName" autocomplete="name" placeholder="What should we call you?"></div>
+          <div class="field"><label for="email">Email address</label><input id="email" type="email" autocomplete="email" required placeholder="you@example.com"></div>
+          <div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" minlength="6" required placeholder="At least 6 characters"></div>
+          <button id="authSubmit" class="btn btn-primary full" type="submit">Log in</button>
         </form>
-
-        <p id="authError" class="auth-error"></p>
-
-        <p class="muted" style="font-size:13px;margin-bottom:0">
-            <span id="switchText">Already have an account?</span>
-            <span class="switch" id="switchMode" onclick="toggleAuth()"> Log in</span>
-        </p>
+        <p class="auth-switch"><span id="authSwitchText">New to COOKIT14?</span> <button id="authSwitch" class="text-button" type="button">Create an account</button></p>
+        <button id="forgotPassword" class="text-button" type="button" style="display:block;margin:12px auto 0">Forgot password?</button>
+        <p class="muted" style="font-size:11px;text-align:center;margin-top:28px">Your recipes are private to your account.</p>
+      </div>
     </div>
-</section>
+    <aside class="auth-art">
+      <span class="art-badge">✦ MADE FOR YOUR KITCHEN</span>
+      <div>
+        <div class="art-title">Save the recipes.<br><span class="orange">Keep the flavor.</span></div>
+        <div class="food-circles"><div class="food-circle">🍝</div><div class="food-circle">🥐</div><div class="food-circle">🍪</div></div>
+        <p style="color:#bbb;max-width:360px;line-height:1.7">Every ingredient, every instruction, every family favorite — all in one place.</p>
+      </div>
+      <div class="auth-foot">COOKIT14 · YOUR RECIPES, YOUR WAY</div>
+    </aside>
+  </section>
 
-<section id="dashboard" class="hidden">
-    <p class="eyebrow">YOUR COOKBOOK</p>
-
-    <div class="dashboard-top">
-        <div>
-            <h1>My recipes<span class="orange">.</span></h1>
-            <p class="muted">Hey, <strong id="welcomeUser"></strong>! What are we cooking?</p>
-        </div>
-        <button class="primary" onclick="createProject()">＋ New recipe</button>
-    </div>
-
-    <div id="projectGrid" class="project-grid"></div>
-
-    <div id="emptyMessage" class="empty hidden">
-        <div style="font-size:38px;margin-bottom:12px">♨</div>
-        <h2>Your cookbook is empty.</h2>
-        <p class="muted">Add your first recipe and start building your collection.</p>
-        <button class="primary" onclick="createProject()">Add your first recipe →</button>
-    </div>
-</section>
-
-<section id="editor" class="hidden">
-    <div class="editor-top">
-        <button class="light" onclick="backToProjects()">← All recipes</button>
-        <div class="toolbar">
-            <span id="saveStatus" class="save-status">✓ All changes saved</span>
-            <button class="delete" onclick="deleteProject()">Delete recipe</button>
-        </div>
-    </div>
-
-    <p class="eyebrow">RECIPE EDITOR</p>
-
-    <input id="projectTitle" class="editor-title" maxlength="100"
-        placeholder="Name your recipe">
-
-    <div class="editor-layout">
-        <div class="surface">
-            <h2>👨‍🍳 Instructions</h2>
-            <p class="muted" style="font-size:13px">
-                Write how to make your recipe, step by step.
-            </p>
-
-            <textarea id="projectContent"
-                placeholder="1. Preheat the oven...\n2. Mix the ingredients...\n3. Bake until golden..."></textarea>
-        </div>
-
-        <div class="surface">
-            <div class="section-heading">
-                <h2>🥕 Ingredients</h2>
-                <span class="orange" style="font-size:20px">✳</span>
-            </div>
-
-            <p class="muted" style="font-size:13px">
-                Add ingredients and tick them off as you prepare.
-            </p>
-
-            <div class="progress-track">
-                <div id="progressFill" class="progress-fill"></div>
-            </div>
-
-            <div id="progressText" class="progress-text">0 of 0 prepared</div>
-
-            <form id="taskForm" class="add-task">
-                <input id="taskInput" maxlength="200"
-                    placeholder="e.g. 200g flour" required>
-                <button class="primary" type="submit">＋</button>
-            </form>
-
-            <div id="taskList" class="task-list"></div>
-            <p id="checklistEmpty" class="checklist-empty">
-                Your ingredients will appear here.
-            </p>
-        </div>
-    </div>
-</section>
-
-</main>
-
-<footer>COOKIT14 · Collect recipes. Create something delicious.</footer>
+  <section id="appScreen" class="hidden">
+    <header>
+      <div class="brand"><span class="brand-mark">♨</span><span>COOKIT<span class="orange">14</span></span></div>
+      <div class="header-actions"><span id="userEmail" class="user-email"></span><button id="logoutBtn" class="btn btn-secondary">Log out</button></div>
+    </header>
+    <main>
+      <div class="welcome-row">
+        <div><div class="orange" style="font-weight:700;font-size:12px;letter-spacing:1px;margin-bottom:9px">YOUR KITCHEN, ORGANIZED</div><h1 id="welcomeTitle">Your recipes.</h1><p class="muted" style="margin-bottom:0">All your favorites, saved to your account.</p></div>
+        <button id="newRecipeBtn" class="btn btn-primary">＋ New recipe</button>
+      </div>
+      <div id="setupWarning" class="setup-warning hidden">Supabase is not configured yet. Add your project URL and publishable key in the code before using accounts.</div>
+      <div class="dashboard">
+        <aside class="sidebar">
+          <div class="sidebar-heading">Your recipes <span id="recipeCount"></span></div>
+          <nav id="recipeNav" class="recipe-nav"></nav>
+          <div class="sidebar-bottom">☁ Saved online to your account<br>Access your recipes from another device by logging in.</div>
+        </aside>
+        <section id="editor" class="editor"></section>
+      </div>
+    </main>
+  </section>
+  <div id="toast" class="toast hidden" role="status"></div>
 
 <script>
-const STORAGE_KEY = "cookit14_recipe_book_v1";
+  // STEP 3: Replace these two values with your Supabase project's URL and publishable key.
+  // Never use a secret/service_role key in browser code.
+  const SUPABASE_URL = "https://snkmzklctqvnieczydrc.supabase.co/rest/v1/";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_40nU4GIcI2w1GD7N7ZwtwQ_ja5OA-3i";
 
-let accounts = readAccounts();
-let currentUser = null;
-let currentProjectId = null;
-let loginMode = false;
-let saveTimer = null;
+  const configured = SUPABASE_URL.startsWith("https://") &&
+    !SUPABASE_URL.includes("PASTE_YOUR") &&
+    SUPABASE_PUBLISHABLE_KEY &&
+    !SUPABASE_PUBLISHABLE_KEY.includes("PASTE_YOUR");
 
-function readAccounts() {
+  const db = configured ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY) : null;
+  const $ = (id) => document.getElementById(id);
+  let authMode = "login";
+  let currentUser = null;
+  let recipes = [];
+  let activeRecipeId = null;
+  let saveTimer = null;
+  let toastTimer = null;
+
+  function showToast(message, error=false) {
+    const t = $("toast"); t.textContent = message; t.classList.toggle("error", error); t.classList.remove("hidden");
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.add("hidden"), 3200);
+  }
+  function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  }
+  function setAuthMode(mode) {
+    authMode = mode;
+    const signup = mode === "signup";
+    $("authTitle").innerHTML = signup ? 'Create your <span class="orange">recipe book.</span>' : 'Good food starts <span class="orange">here.</span>';
+    $("authSubtitle").textContent = signup ? "Create an account to save your recipes online and access them from anywhere." : "Sign in to keep your favorite recipes safe and ready wherever you cook.";
+    $("authModeLabel").textContent = signup ? "JOIN COOKIT14" : "YOUR PERSONAL RECIPE BOOK";
+    $("nameField").classList.toggle("hidden", !signup);
+    $("authSubmit").textContent = signup ? "Create account" : "Log in";
+    $("authSwitchText").textContent = signup ? "Already have an account?" : "New to COOKIT14?";
+    $("authSwitch").textContent = signup ? "Log in" : "Create an account";
+    $("forgotPassword").style.display = signup ? "none" : "block";
+    $("password").autocomplete = signup ? "new-password" : "current-password";
+  }
+  $("authSwitch").addEventListener("click", () => setAuthMode(authMode === "login" ? "signup" : "login"));
+
+  function showApp() {
+    $("authScreen").classList.add("hidden"); $("appScreen").classList.remove("hidden");
+    $("userEmail").textContent = currentUser.email || "";
+    $("welcomeTitle").textContent = "Your recipes" + (currentUser.user_metadata?.display_name ? ", " + currentUser.user_metadata.display_name : "") + ".";
+    $("setupWarning").classList.toggle("hidden", configured);
+  }
+  function showAuth() { $("appScreen").classList.add("hidden"); $("authScreen").classList.remove("hidden"); }
+
+  $("authForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!configured) { showToast("First add your Supabase URL and publishable key in the code.", true); return; }
+    const email = $("email").value.trim();
+    const password = $("password").value;
+    const submit = $("authSubmit"); submit.disabled = true; submit.textContent = "Please wait…";
     try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-    } catch (error) {
-        return {};
-    }
-}
+      if (authMode === "signup") {
+        const displayName = $("displayName").value.trim();
+        const {data, error} = await db.auth.signUp({email, password, options:{data:{display_name:displayName}}});
+        if (error) throw error;
+        if (data.session) { currentUser = data.user; await loadRecipes(); }
+        else showToast("Account created! Check your email to confirm it, then log in.");
+      } else {
+        const {data, error} = await db.auth.signInWithPassword({email, password});
+        if (error) throw error;
+        currentUser = data.user; await loadRecipes();
+      }
+    } catch (error) { showToast(error.message || "Could not sign in.", true); }
+    finally { submit.disabled = false; submit.textContent = authMode === "signup" ? "Create account" : "Log in"; }
+  });
 
-function persist() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(accounts));
-}
+  $("forgotPassword").addEventListener("click", async () => {
+    if (!configured) { showToast("Set up Supabase first.", true); return; }
+    const email = $("email").value.trim();
+    if (!email) { showToast("Enter your email address first.", true); return; }
+    try {
+      const {error} = await db.auth.resetPasswordForEmail(email, {redirectTo: window.location.origin + window.location.pathname});
+      if (error) throw error;
+      showToast("If the account exists, a password reset email has been sent.");
+    } catch(error) { showToast(error.message, true); }
+  });
 
-function toggleAuth() {
-    loginMode = !loginMode;
+  $("logoutBtn").addEventListener("click", async () => {
+    if (db) { const {error} = await db.auth.signOut(); if (error) { showToast(error.message, true); return; } }
+    currentUser = null; recipes = []; activeRecipeId = null; showAuth();
+  });
 
-    document.getElementById("authTitle").textContent =
-        loginMode ? "Welcome back" : "Create your recipe book";
+  async function loadRecipes() {
+    if (!currentUser) return;
+    const {data, error} = await db.from("recipes").select("*").order("updated_at", {ascending:false});
+    if (error) { showToast("Could not load recipes: " + error.message, true); return; }
+    recipes = (data || []).map(r => ({...r, ingredients: Array.isArray(r.ingredients) ? r.ingredients : []}));
+    activeRecipeId = recipes[0]?.id || null;
+    showApp(); render();
+  }
 
-    document.getElementById("authDescription").textContent =
-        loginMode ? "Log in to see your saved recipes." : "Sign up to save your recipes.";
+  async function createRecipe() {
+    if (!db || !currentUser) return;
+    const newRecipe = {user_id:currentUser.id, title:"Untitled recipe", instructions:"", ingredients:[]};
+    const {data, error} = await db.from("recipes").insert(newRecipe).select().single();
+    if (error) { showToast("Could not create recipe: " + error.message, true); return; }
+    recipes.unshift({...data, ingredients:[]}); activeRecipeId = data.id; render();
+    const titleInput = $("recipeTitle"); if (titleInput) { titleInput.focus(); titleInput.select(); }
+  }
+  $("newRecipeBtn").addEventListener("click", createRecipe);
 
-    document.getElementById("authButton").textContent =
-        loginMode ? "Log in →" : "Create account →";
+  async function deleteRecipe(id) {
+    const recipe = recipes.find(r => r.id === id);
+    if (!recipe || !confirm(`Delete "${recipe.title}"? This cannot be undone.`)) return;
+    const {error} = await db.from("recipes").delete().eq("id", id);
+    if (error) { showToast("Could not delete recipe: " + error.message, true); return; }
+    recipes = recipes.filter(r => r.id !== id);
+    if (activeRecipeId === id) activeRecipeId = recipes[0]?.id || null;
+    render(); showToast("Recipe deleted.");
+  }
 
-    document.getElementById("switchText").textContent =
-        loginMode ? "Need an account?" : "Already have an account?";
-
-    document.getElementById("switchMode").textContent =
-        loginMode ? " Sign up" : " Log in";
-
-    document.getElementById("authError").textContent = "";
-}
-
-document.getElementById("authForm").addEventListener("submit", event => {
-    event.preventDefault();
-
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value;
-    const error = document.getElementById("authError");
-
-    if (!/^[a-zA-Z0-9_-]{3,30}$/.test(username)) {
-        error.textContent = "Use 3–30 English letters, numbers, _ or - for your username.";
-        return;
-    }
-
-    const key = username.toLowerCase();
-
-    if (loginMode) {
-        if (!accounts[key] || accounts[key].password !== password) {
-            error.textContent = "Incorrect username or password.";
-            return;
-        }
-    } else {
-        if (accounts[key]) {
-            error.textContent = "This username already exists. Try logging in.";
-            return;
-        }
-
-        accounts[key] = {
-            username,
-            password,
-            projects: []
-        };
-
-        persist();
-    }
-
-    currentUser = key;
-    document.getElementById("password").value = "";
-    document.getElementById("authError").textContent = "";
-    showDashboard();
-});
-
-function showDashboard() {
-    document.getElementById("authScreen").classList.add("hidden");
-    document.getElementById("dashboard").classList.remove("hidden");
-    document.getElementById("editor").classList.add("hidden");
-    document.getElementById("logoutButton").classList.remove("hidden");
-    document.getElementById("welcomeUser").textContent =
-        accounts[currentUser].username;
-
-    currentProjectId = null;
-    renderProjects();
-}
-
-function logout() {
-    saveCurrentProject();
-    clearTimeout(saveTimer);
-
-    currentUser = null;
-    currentProjectId = null;
-
-    document.getElementById("dashboard").classList.add("hidden");
-    document.getElementById("editor").classList.add("hidden");
-    document.getElementById("authScreen").classList.remove("hidden");
-    document.getElementById("logoutButton").classList.add("hidden");
-}
-
-function createProject() {
-    const recipe = {
-        id: Date.now().toString() + Math.random().toString(36).slice(2),
-        title: "Untitled recipe",
-        content: "",
-        tasks: [],
-        updatedAt: new Date().toISOString()
-    };
-
-    accounts[currentUser].projects.unshift(recipe);
-    persist();
-    openProject(recipe.id);
-
-    document.getElementById("projectTitle").focus();
-    document.getElementById("projectTitle").select();
-}
-
-function renderProjects() {
-    const grid = document.getElementById("projectGrid");
-    grid.innerHTML = "";
-
-    const projects = accounts[currentUser].projects;
-
-    document.getElementById("emptyMessage").classList.toggle(
-        "hidden", projects.length > 0
-    );
-
-    projects.forEach(recipe => {
-        const card = document.createElement("article");
-        card.className = "project-card";
-
-        const symbol = document.createElement("div");
-        symbol.className = "project-symbol";
-        symbol.textContent = "♨";
-
-        const title = document.createElement("h3");
-        title.textContent = recipe.title || "Untitled recipe";
-
-        const preview = document.createElement("p");
-        preview.className = "muted";
-        preview.style.fontSize = "13px";
-
-        const ingredientCount = (recipe.tasks || []).length;
-        preview.textContent = ingredientCount + " ingredients · " +
-            (recipe.content ? "Instructions added" : "No instructions yet");
-
-        const date = document.createElement("div");
-        date.className = "card-date";
-        date.textContent = "Updated " +
-            new Date(recipe.updatedAt).toLocaleDateString();
-
-        card.append(symbol, title, preview, date);
-        card.addEventListener("click", () => openProject(recipe.id));
-        grid.appendChild(card);
+  function render() {
+    $("recipeCount").textContent = `(${recipes.length})`;
+    const nav = $("recipeNav");
+    nav.replaceChildren();
+    recipes.forEach(recipe => {
+      const button = document.createElement("button");
+      button.className = "recipe-nav-item" + (recipe.id === activeRecipeId ? " active" : "");
+      const dot = document.createElement("span"); dot.className = "nav-dot";
+      const name = document.createElement("span"); name.className = "nav-name"; name.textContent = recipe.title || "Untitled recipe";
+      button.append(dot, name); button.addEventListener("click", () => { flushSave(); activeRecipeId = recipe.id; render(); });
+      nav.append(button);
     });
-}
-
-function getProject() {
-    if (!currentUser || !currentProjectId) return null;
-
-    return accounts[currentUser].projects.find(
-        recipe => recipe.id === currentProjectId
-    ) || null;
-}
-
-function openProject(id) {
-    saveCurrentProject();
-    clearTimeout(saveTimer);
-
-    currentProjectId = id;
-    const recipe = getProject();
-
-    if (!recipe) return;
-
-    if (!Array.isArray(recipe.tasks)) recipe.tasks = [];
-
-    document.getElementById("dashboard").classList.add("hidden");
-    document.getElementById("editor").classList.remove("hidden");
-
-    document.getElementById("projectTitle").value = recipe.title;
-    document.getElementById("projectContent").value = recipe.content;
-    document.getElementById("saveStatus").textContent = "✓ All changes saved";
-
-    renderTasks();
-    window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-function scheduleSave() {
-    document.getElementById("saveStatus").textContent = "Saving...";
-    clearTimeout(saveTimer);
-    saveTimer = setTimeout(saveCurrentProject, 350);
-}
-
-function saveCurrentProject() {
-    const recipe = getProject();
-    if (!recipe) return;
-
-    clearTimeout(saveTimer);
-
-    recipe.title = document.getElementById("projectTitle").value.trim()
-        || "Untitled recipe";
-
-    recipe.content = document.getElementById("projectContent").value;
-    recipe.updatedAt = new Date().toISOString();
-
-    persist();
-
-    document.getElementById("saveStatus").textContent = "✓ All changes saved";
-    renderProjects();
-}
-
-function backToProjects() {
-    saveCurrentProject();
-    clearTimeout(saveTimer);
-
-    currentProjectId = null;
-
-    document.getElementById("editor").classList.add("hidden");
-    document.getElementById("dashboard").classList.remove("hidden");
-
-    renderProjects();
-    window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-function deleteProject() {
-    const recipe = getProject();
-    if (!recipe) return;
-
-    if (!confirm(`Delete "${recipe.title}" and its ingredients?`)) return;
-
-    clearTimeout(saveTimer);
-
-    accounts[currentUser].projects =
-        accounts[currentUser].projects.filter(
-            item => item.id !== currentProjectId
-        );
-
-    currentProjectId = null;
-    persist();
-
-    document.getElementById("editor").classList.add("hidden");
-    document.getElementById("dashboard").classList.remove("hidden");
-
-    renderProjects();
-}
-
-function addTask(text) {
-    const recipe = getProject();
-    if (!recipe) return;
-
-    if (!Array.isArray(recipe.tasks)) recipe.tasks = [];
-
-    recipe.tasks.push({
-        id: Date.now().toString() + Math.random().toString(36).slice(2),
-        text,
-        done: false
+    const editor = $("editor");
+    const recipe = recipes.find(r => r.id === activeRecipeId);
+    if (!recipe) {
+      editor.innerHTML = `<div class="empty-state"><div class="empty-icon">🍳</div><h2>Your recipe book is ready.</h2><p class="muted">Add your first recipe and keep all the details in one place.</p><button class="btn btn-primary" id="emptyNewBtn">＋ Create your first recipe</button></div>`;
+      $("emptyNewBtn").addEventListener("click", createRecipe);
+      return;
+    }
+    editor.innerHTML = `
+      <div class="editor-top">
+        <input id="recipeTitle" class="recipe-title-input" aria-label="Recipe name" maxlength="120" value="${escapeHTML(recipe.title || "")}" placeholder="Recipe name">
+        <span id="saveStatus" class="save-status">☁ Saved online</span>
+        <button id="deleteRecipeBtn" class="btn btn-plain" title="Delete recipe" aria-label="Delete recipe">Delete</button>
+      </div>
+      <div class="editor-grid">
+        <section class="panel">
+          <div class="panel-head"><h2>🧺 Ingredients</h2><span id="ingredientCount" class="count"></span></div>
+          <div id="ingredientList" class="ingredient-list"></div>
+          <form id="addIngredientForm" class="add-row"><input id="ingredientInput" maxlength="180" placeholder="e.g. 200 g flour" aria-label="New ingredient"><button class="btn btn-primary" type="submit">Add</button></form>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><h2>📝 Instructions</h2><span class="count">Method</span></div>
+          <textarea id="instructions" class="instructions" maxlength="30000" placeholder="Write your recipe instructions here…">${escapeHTML(recipe.instructions || "")}</textarea>
+        </section>
+      </div>`;
+    $("recipeTitle").addEventListener("input", e => { recipe.title = e.target.value; updateNavName(recipe); scheduleSave(); });
+    $("instructions").addEventListener("input", e => { recipe.instructions = e.target.value; scheduleSave(); });
+    $("deleteRecipeBtn").addEventListener("click", () => deleteRecipe(recipe.id));
+    $("addIngredientForm").addEventListener("submit", e => {
+      e.preventDefault(); const input = $("ingredientInput"); const value = input.value.trim();
+      if (!value) return;
+      recipe.ingredients = [...(recipe.ingredients || []), {id:crypto.randomUUID(), text:value, checked:false}];
+      input.value = ""; renderIngredientList(recipe); scheduleSave(); input.focus();
     });
+    renderIngredientList(recipe);
+  }
 
-    recipe.updatedAt = new Date().toISOString();
-
-    persist();
-    renderTasks();
-    renderProjects();
-}
-
-function renderTasks() {
-    const recipe = getProject();
-    const list = document.getElementById("taskList");
-    list.innerHTML = "";
-
-    if (!recipe) return;
-    if (!Array.isArray(recipe.tasks)) recipe.tasks = [];
-
-    const ingredients = recipe.tasks;
-    const prepared = ingredients.filter(item => item.done).length;
-
-    document.getElementById("progressText").textContent =
-        `${prepared} of ${ingredients.length} prepared`;
-
-    document.getElementById("progressFill").style.width =
-        ingredients.length
-            ? `${prepared / ingredients.length * 100}%`
-            : "0%";
-
-    document.getElementById("checklistEmpty").classList.toggle(
-        "hidden", ingredients.length > 0
-    );
-
-    ingredients.forEach(ingredient => {
-        const row = document.createElement("div");
-        row.className = "task" + (ingredient.done ? " done" : "");
-
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.checked = ingredient.done;
-        checkbox.setAttribute("aria-label", "Mark ingredient prepared");
-
-        checkbox.addEventListener("change", () => {
-            ingredient.done = checkbox.checked;
-            recipe.updatedAt = new Date().toISOString();
-
-            persist();
-            renderTasks();
-            renderProjects();
-        });
-
-        const text = document.createElement("span");
-        text.className = "task-text";
-        text.textContent = ingredient.text;
-
-        const remove = document.createElement("button");
-        remove.className = "task-delete";
-        remove.type = "button";
-        remove.textContent = "×";
-        remove.setAttribute("aria-label", "Delete ingredient");
-
-        remove.addEventListener("click", () => {
-            recipe.tasks = recipe.tasks.filter(
-                item => item.id !== ingredient.id
-            );
-
-            recipe.updatedAt = new Date().toISOString();
-
-            persist();
-            renderTasks();
-            renderProjects();
-        });
-
-        row.append(checkbox, text, remove);
-        list.appendChild(row);
+  function updateNavName(recipe) {
+    const button = [...$("recipeNav").children].find(b => b.classList.contains("active"));
+    if (button) button.querySelector(".nav-name").textContent = recipe.title || "Untitled recipe";
+  }
+  function renderIngredientList(recipe) {
+    const list = $("ingredientList"); list.replaceChildren();
+    (recipe.ingredients || []).forEach((ingredient, index) => {
+      const row = document.createElement("div"); row.className = "ingredient-row" + (ingredient.checked ? " checked" : "");
+      const checkbox = document.createElement("input"); checkbox.type = "checkbox"; checkbox.checked = !!ingredient.checked; checkbox.setAttribute("aria-label", "Mark ingredient as used");
+      checkbox.addEventListener("change", () => { recipe.ingredients[index].checked = checkbox.checked; renderIngredientList(recipe); scheduleSave(); });
+      const text = document.createElement("span"); text.className = "ingredient-text"; text.textContent = ingredient.text;
+      const del = document.createElement("button"); del.className = "delete-ingredient"; del.type = "button"; del.textContent = "×"; del.setAttribute("aria-label", "Remove ingredient");
+      del.addEventListener("click", () => { recipe.ingredients.splice(index,1); renderIngredientList(recipe); scheduleSave(); });
+      row.append(checkbox,text,del); list.append(row);
     });
-}
+    $("ingredientCount").textContent = `${(recipe.ingredients || []).filter(i => i.checked).length}/${(recipe.ingredients || []).length} done`;
+  }
 
-document.getElementById("taskForm").addEventListener("submit", event => {
-    event.preventDefault();
+  function scheduleSave() {
+    const status = $("saveStatus"); if (status) status.textContent = "Saving…";
+    clearTimeout(saveTimer); saveTimer = setTimeout(saveActiveRecipe, 650);
+  }
+  async function flushSave() { clearTimeout(saveTimer); await saveActiveRecipe(); }
+  async function saveActiveRecipe() {
+    const recipe = recipes.find(r => r.id === activeRecipeId);
+    if (!recipe || !db) return;
+    const status = $("saveStatus"); if (status) status.textContent = "Saving…";
+    const {data, error} = await db.from("recipes").update({
+      title: recipe.title || "Untitled recipe",
+      instructions: recipe.instructions || "",
+      ingredients: recipe.ingredients || [],
+      updated_at: new Date().toISOString()
+    }).eq("id", recipe.id).select("id").maybeSingle();
+    if (error) { if (status) status.textContent = "Save failed"; showToast("Could not save: " + error.message, true); return; }
+    if (!data) { if (status) status.textContent = "Not saved"; showToast("The database did not update this recipe. Check your table policies.", true); return; }
+    if (status && activeRecipeId === recipe.id) status.textContent = "☁ Saved online";
+  }
 
-    const input = document.getElementById("taskInput");
-    const text = input.value.trim();
-
-    if (!text) return;
-
-    addTask(text);
-    input.value = "";
-    input.focus();
-});
-
-document.getElementById("projectTitle").addEventListener("input", scheduleSave);
-document.getElementById("projectContent").addEventListener("input", scheduleSave);
-
-window.addEventListener("beforeunload", saveCurrentProject);
+  async function boot() {
+    if (!configured) { $("setupWarning").classList.remove("hidden"); return; }
+    try {
+      const {data:{session}} = await db.auth.getSession();
+      if (session?.user) { currentUser = session.user; await loadRecipes(); }
+      db.auth.onAuthStateChange((_event, session) => {
+        if (!session) { currentUser = null; recipes = []; activeRecipeId = null; showAuth(); }
+      });
+    } catch (error) { showToast(error.message || "Could not connect to Supabase.", true); }
+  }
+  setAuthMode("login");
+  boot();
 </script>
-
 </body>
 </html>
